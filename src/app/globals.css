@@ -67,7 +67,12 @@
     @apply bg-background text-foreground;
     min-height: 100vh;
     margin: 0;
-    font-family: 'Courier New', Courier, monospace; /* Changed to monospaced font */
+    font-family: 'Courier New', Courier, monospace;
+    
+    /* Apply the dotted background globally with reduced opacity */
+    background-image: radial-gradient(circle, rgba(209, 209, 209, 0.5) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-color: #f3f4f6; /* Light gray background color */
   }
 
   .hero-section {

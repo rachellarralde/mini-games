@@ -286,3 +286,8 @@ export function AnagramGuesserComponent() {
     </div>
   )
 }
+
+// TODO: Add a difficulty setting to the game for words of different lengths
+// TODO: Add background music that changes based on whether the player gives a correct or incorrect answer, and also upon winning. 
+// TODO: Toggle to turn on and off background music
+// TODO: Display the number of remaining attempts
