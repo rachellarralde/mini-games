@@ -18,7 +18,6 @@ const generateProblem = (): Problem => {
 
 export default function MathBlitz() {
   // Timer states
-  const [startTime, setStartTime] = useState<number | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [completed, setCompleted] = useState(false);
@@ -42,7 +41,6 @@ export default function MathBlitz() {
 
   const startGame = () => {
     setElapsedTime(30); // Set countdown time (e.g., 30 seconds)
-    setStartTime(Date.now());
     setGameStarted(true);
     setCompleted(false);
   };

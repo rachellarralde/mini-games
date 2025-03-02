@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Alert } from "@/components/ui/alert";
 
 const colors = ["red", "green", "blue", "yellow"];
@@ -19,6 +19,44 @@ export default function SimonSays() {
   const [message, setMessage] = useState("Get ready!");
   const [timeLeft, setTimeLeft] = useState(30); // Timer state initialized to 30 seconds
   const [gameOver, setGameOver] = useState(false); // State to track if the game is over
+
+  // Move handleUserClick definition before useEffect
+  const handleUserClick = useCallback(
+    (color: string) => {
+      const newUserSequence = [...userSequence, color];
+      setUserSequence(newUserSequence);
+
+      const index = newUserSequence.length - 1;
+      if (newUserSequence[index] !== sequence[index]) {
+        setMessage("Wrong sequence! Game over.");
+        setGameOver(true);
+      } else {
+        if (newUserSequence.length === sequence.length) {
+          setMessage("Good job! Get ready for the next round.");
+          setUserSequence([]);
+          setTimeout(() => {
+            addColorToSequence();
+          }, 1000);
+        }
+      }
+    },
+    [userSequence, sequence]
+  );
+
+  // Now use handleUserClick in useEffect
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const color = keyToColor[e.key.toLowerCase()];
+      if (color && !gameOver) {
+        handleUserClick(color);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [userSequence, sequence, gameOver, handleUserClick]);
 
   // Add a new color to the sequence
   const addColorToSequence = () => {
@@ -44,45 +82,6 @@ export default function SimonSays() {
 
     return () => clearInterval(timer);
   }, []);
-
-  // Listen for keyboard events and map keys to colors
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const color = keyToColor[e.key.toLowerCase()];
-      if (color && !gameOver) {
-        // Prevent input if game is over
-        handleUserClick(color);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [userSequence, sequence, gameOver]);
-
-  // Handle user input (from both clicks and keyboard)
-  const handleUserClick = (color: string) => {
-    const newUserSequence = [...userSequence, color];
-    setUserSequence(newUserSequence);
-
-    const index = newUserSequence.length - 1;
-    // Check if the latest color matches the sequence
-    if (newUserSequence[index] !== sequence[index]) {
-      setMessage("Wrong sequence! Game over.");
-      setGameOver(true); // Set game over state
-    } else {
-      // If the user matched the entire current sequence
-      if (newUserSequence.length === sequence.length) {
-        setMessage("Good job! Get ready for the next round.");
-        setUserSequence([]);
-
-        setTimeout(() => {
-          addColorToSequence();
-        }, 1000);
-      }
-    }
-  };
 
   return (
     <div
